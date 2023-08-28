@@ -1,22 +1,23 @@
 import React from 'react'
 import Layout from '../../component/layout/Layout'
-import { useAuth } from '../../context/auth'
-import UserMenu from '../../component/layout/UserMenu';
-const Dashboard = () => {
-  const [auth]=useAuth();
+import AdminMenu from '../../component/layout/AdminMenu'
+import { useAuth } from "../../context/auth"
+
+const Admindashboard = () => {
+  const [auth] = useAuth();
   return (
-   <Layout title={'Dashboard- ecommerce site'}>
-     <div class='container m-5 p-5'>
+    <Layout>
+      <div class='container m-5 p-5'>
         <div class='grid grid-cols-6 gap-4'>
           <div class='col-start-1 col-end-3'>
-            <UserMenu />
+            <AdminMenu />
           </div>
           <div class='col-span-3'>
             <div
               class="block w-full  rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
               <div
                 class="border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50 dark:text-neutral-50">
-              <span>User Name :</span>  {auth?.user?.name}
+              <span>Admin Name :</span>  {auth?.user?.name}
               </div>
               <ul class="w-full">
                 <li
@@ -38,8 +39,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-   </Layout>
+    </Layout>
   )
 }
 
-export default Dashboard
+export default Admindashboard

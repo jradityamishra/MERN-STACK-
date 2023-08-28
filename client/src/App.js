@@ -12,6 +12,13 @@ import { Toaster } from 'react-hot-toast';
 import Dashboard from './pages/user/Dashboard'
 import Private from './component/routes/Private'
 import ForgotPassword from './pages/Auth/ForgotPassword'
+import Adminroute from './component/routes/AdminRoute'
+import Admindashboard from './pages/Admin/Admindashboard'
+import CreateCategory from './pages/Admin/CreateCategory'
+import CreateProduct from './pages/Admin/CreateProduct'
+import User from './pages/Admin/User'
+import Profile from './pages/user/Profile'
+import Order from './pages/user/Order'
 const App = () => {
   return (
    
@@ -20,7 +27,17 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/dashboard' element={<Private/>}>
-        <Route path='' element={<Dashboard/>}/>
+        <Route path='user' element={<Dashboard/>}/>
+        <Route path='user/profile' element={<Profile/>}/>
+        <Route path='user/order' element={<Order/>}/>
+        
+        </Route>
+        <Route path='/dashboard' element={<Adminroute/>}>
+        <Route path='admin' element={<Admindashboard/>}/>
+        <Route path='admin/create-category' element={<CreateCategory/>}/>
+        <Route path='admin/create-product' element={<CreateProduct/>}/>
+        <Route path='admin/user' element={<User/>}/>
+       
         </Route>
         <Route path='/forgotpassword' element={<ForgotPassword/>}/>
         <Route path='/about' element={<About/>}/>
