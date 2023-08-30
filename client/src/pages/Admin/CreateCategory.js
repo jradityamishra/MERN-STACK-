@@ -3,8 +3,28 @@ import Layout from '../../component/layout/Layout'
 import AdminMenu from '../../component/layout/AdminMenu'
 import toast from 'react-hot-toast'
 import axios from "axios"
+import CategoryFormat from '../../component/Form/CategoryFormat.js'
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
+  const [name, setName] = useState("");
+  const [isVisible,setIsVisible]=useState(false)
+  //handle form submit
+  const handleSubmit=async(e)=>{
+    e.preventDefault();
+    try{
+      const {data}= await axios.post("/api/v1/category/create-category",
+      {name})
+      if(data?.success){
+        toast.success(`${name} is created`)
+        getAllCategory()
+      }else{
+        toast.error(`${data.message}`)
+      }
+
+    }catch(error){
+      toast.error("Something went wrong in input form")
+    }
+  }
 
   //get all cat
   const getAllCategory = async () => {
@@ -31,6 +51,9 @@ const CreateCategory = () => {
           </div>
           <div class='col-span-3 flex flex-col justify-center'>
             <h1 className='text-2xl font-bold underline  mx-10'>Manage Category</h1>
+            <div className='p-3'>
+              <CategoryFormat handleSubmit={handleSubmit} value={name} setValue={setName}/>
+            </div>
             <div className='flex justify-center'>
               <div className="flex flex-col w-3/4">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -53,7 +76,9 @@ const CreateCategory = () => {
                           <tr className="border-b dark:border-neutral-500">
 
                            <td key={value._id} class="whitespace-nowrap px-6 py-4">{value.name}</td>
-                            <td><button className='bg-blue-600  px-5 py-2 rounded text-white font-semibold'>Edit</button></td>
+                            <td><button className='bg-blue-600  px-5 py-2 rounded text-white font-semibold mx-2'>Edit</button></td>
+                            <td><button className='bg-red-600  px-5 py-2 rounded text-white font-semibold mx-2'>Delete</button></td>
+                          
                             </tr>  
                            </>
                           ))}

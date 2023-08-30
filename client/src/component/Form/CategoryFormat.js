@@ -1,11 +1,27 @@
-import React from 'react'
+import React,{useState} from 'react'
 
-const CategoryFormat = () => {
+
+const CategoryFormat = ({value,setValue,handleSubmit}) => {
+ 
   return (
-    <div>
-        
-    </div>
-  )
+    <>
+   
+   <form >
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter new category"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+        </div>
+
+        <button onClick={handleSubmit}  className="px-6 py-2 bg-cyan-600">
+          Submit
+        </button>
+      </form>
+ </> )
 }
 
 export default CategoryFormat

@@ -10,7 +10,7 @@ const router=express.Router();
 //routes
 
 //CREATE CATEGORY
-router.post('/create-category',requireSignIn,isAdmin,createCategoryController)
+router.post('/create-category',createCategoryController)
 
 //UPDATE CATEGORY
 router.put('/update-category/:id',requireSignIn,isAdmin,updateCategoryController)
