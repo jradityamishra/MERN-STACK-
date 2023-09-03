@@ -9,6 +9,7 @@ const AuthProvider=({children})=>{
         user:null,
         token:''
     })
+    //axios.default.headers.commom["Authorization"]=auth?.token //common headers sab ma bhajna ka liya
     useEffect(() => {
         const parse=localStorage.getItem('auth');
        

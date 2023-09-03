@@ -4,12 +4,13 @@ import toast from 'react-hot-toast'
 import Layout from '../../component/layout/Layout.js'
 import AdminMenu from '../../component/layout/AdminMenu.js'
 import { Select } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,useParams } from 'react-router-dom'
 import { useAuth } from '../../context/auth'
 const { Option } = Select
 
-const CreateProduct = () => {
+const UpdateProduct = () => {
   const navigate=useNavigate();
+  const params=useParams();
   const [auth] = useAuth();
   const [categories,setCategories] = useState([])
   const[category,SetCategory]=useState("")
@@ -19,32 +20,71 @@ const CreateProduct = () => {
   const [quantity, setQuantity] = useState("")
   const [description, setDescription] = useState("")
   const [shipping, setShipping] = useState("")
-
-  //CREATE PRODUCT
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const productData = new FormData();
-      productData.append("name", name);
-      productData.append("description", description);
-      productData.append("price", price);
-      productData.append("quantity", quantity);
-      productData.append("photo", photo);
-      productData.append("category", category);
-      const { data } = await axios.post("/api/v1/product/create-product",
-      productData,
-        { headers: { Authorization: auth.token } })
-        if(data?.sucess){
-         toast.success(data?.message)
-          navigate("/dashboard/admin/products")
-        }else{
-          toast.error(data?.message)
+  const [id,setId]=useState("")
+//GET SINGLE PRODUCT 
+const getSingleProduct=async()=>{
+    try{
+        const {data}=await axios.get(`/api/v1/product/get-product/${params.slug}`)
+        setName(data.product.name)
+        setDescription(data.product.description)
+        setPrice(data.product.price)
+        setQuantity(data.product.quantity)
+        setName(data.product.name)
+        setId(data.product._id);
+        SetCategory(data.product.category._id)
+        setShipping(data.product.shipping)
+        console.log(data)
+       
+      }catch(error){
+        console.log(error)
+    toast.error("error in getting single products")}
+}
+useEffect(()=>{
+  getSingleProduct()
+   //eslint-disable-next-line
+},[])
+  //UPDATE PRODUCT
+    
+    const handleUpdate = async (e) => {
+      e.preventDefault();
+      try {
+        const productData = new FormData();
+        productData.append("name", name);
+        productData.append("description", description);
+        productData.append("price", price);
+        productData.append("quantity", quantity);
+        photo && productData.append("photo", photo);
+        productData.append("category", category);
+        const { data } = axios.put(
+          `/api/v1/product/update-product/${id}`,
+          productData,
+          {headers:{Authorization:auth.token}}
+          
+        );
+        if (data?.success) {
+          toast.error(data?.message);
+        } else {
+          toast.success("Product Updated Successfully");
+          navigate("/dashboard/admin/products");
         }
-    } catch (error) {
-      console.log(error)
-      toast.error("error in creating product")
+      } catch (error) {
+        console.log(error);
+        toast.error("something went wrong");
+      }
+    };
+
+    //DELETE PRODUCT
+    const handleDelete=async()=>{
+      try{
+        let answer=window.prompt("are you sure to delete this product")
+        if(!answer) return;
+        const {data}=await axios.delete(`/api/v1/product/product-delete/${id}`)
+        navigate("/dashboard/admin/products");
+
+      }catch(error){
+        console.log(error)
+        toast.error("error in deleting product")}
     }
-  }
   //Get ALL CATEGORY
   const getAllCategory = async () => {
     try {
@@ -64,14 +104,14 @@ const CreateProduct = () => {
   },[])
 
   return (
-    <Layout title={'DashBoard-CreateProduct'}>
+    <Layout title={'DashBoard-UpdateProduct'}>
       <div class='container m-5 p-5'>
         <div class='grid grid-cols-6 gap-4'>
           <div class='col-start-1 col-end-3'>
             <AdminMenu />
           </div>
           <div class='col-span-3'>
-            <h1>CreateProduct</h1>
+            <h1>UpdateProduct</h1>
             <div className="m-1 w-11/12">
               <Select
                 bordered={false}
@@ -79,7 +119,9 @@ const CreateProduct = () => {
                 size='large'
                 showSearch
                 className='form-select mb-3'
-                onChange={(value) => SetCategory(value)} >
+                onChange={(value) => SetCategory(value)} 
+                value={category}>
+                
                {categories?.map((c) => 
              {
               return (
@@ -102,11 +144,15 @@ const CreateProduct = () => {
                 </label>
               </div>
               <div className="mb-3">
-                {photo && (
+                {photo ? (
                   <div className='flex justify-center'>
                     <img src={URL.createObjectURL(photo)} className='w-3/4 rounded' alt='product-photo' height={'200px'} />
                   </div>
 
+                ):(
+                  <div className='flex justify-center'>
+                    <img src={`/api/v1/product/get-photo/${id}`} className='w-3/4 rounded' alt='product-photo' height={'200px'} />
+                  </div> 
                 )}
               </div>
               <div className="mb-3 flex flex-col justify-center">
@@ -141,7 +187,9 @@ const CreateProduct = () => {
                   showSearch
 
                   className='mb-3 select'
-                  onChange={(value) => { setShipping(value) }}>
+                  onChange={(value) => { setShipping(value) }}
+                 value={shipping ? 'yes':'no'}
+                  >
 
                   <Option value="0" >
                     No
@@ -152,7 +200,10 @@ const CreateProduct = () => {
                 </Select>
               </div>
               <div className="mb-3">
-                <button className='px-6 py-3 bg-cyan-600' onClick={handleSubmit}>CREATE PRODUCT</button>
+                <button className='px-6 py-3 bg-cyan-600' onClick={handleUpdate}>UPDATE PRODUCT</button>
+              </div>
+              <div className="mb-3">
+                <button className='px-6 py-3 bg-cyan-600' onClick={handleDelete}>DELETE PRODUCT</button>
               </div>
             </div>
           </div>
@@ -162,4 +213,4 @@ const CreateProduct = () => {
   )
 }
 
-export default CreateProduct
+export default UpdateProduct

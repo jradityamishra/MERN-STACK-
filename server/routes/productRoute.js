@@ -5,7 +5,9 @@ import { createProductController,
          getSingleProductController
         ,getPhotoProductController,
         deleteProductController,
-        updateProductController} from "../controller/productController.js"
+        updateProductController,
+        productFilterController,
+        searchController} from "../controller/productController.js"
 import formidable from "express-formidable"
 
 const router=express.Router()
@@ -23,9 +25,15 @@ router.get('/get-product/:slug',getSingleProductController)
 router.get('/get-photo/:pid',getPhotoProductController)
 
 //product delete
-router.get('/product-delete/:pid',deleteProductController)
+router.delete('/product-delete/:pid',deleteProductController)
 
 //update product
 router.put('/update-product/:pid',requireSignIn,isAdmin,formidable(),updateProductController)
+
+//filter products
+router.post('/product-filters',productFilterController)
+
+//search product
+router.get('/search/:keyword',searchController)
 
 export default router

@@ -19,6 +19,9 @@ import CreateProduct from './pages/Admin/CreateProduct'
 import User from './pages/Admin/User'
 import Profile from './pages/user/Profile'
 import Order from './pages/user/Order'
+import Products from './pages/Admin/Products'
+import UpdateProduct from './pages/Admin/UpdateProduct'
+import Search from "./pages/Search"
 const App = () => {
   return (
    
@@ -26,6 +29,7 @@ const App = () => {
       
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/search' element={<Search/>}/>
         <Route path='/dashboard' element={<Private/>}>
         <Route path='user' element={<Dashboard/>}/>
         <Route path='user/profile' element={<Profile/>}/>
@@ -37,6 +41,8 @@ const App = () => {
         <Route path='admin/create-category' element={<CreateCategory/>}/>
         <Route path='admin/create-product' element={<CreateProduct/>}/>
         <Route path='admin/user' element={<User/>}/>
+        <Route path='admin/products' element={<Products/>}/>
+        <Route path='admin/update-products/:slug' element={<UpdateProduct/>}/>
        
         </Route>
         <Route path='/forgotpassword' element={<ForgotPassword/>}/>

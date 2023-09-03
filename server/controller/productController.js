@@ -1,6 +1,7 @@
 import slugify from "slugify"
 import productModel from "../models/productModel.js"
 import fs from 'fs'
+import { isValidObjectId } from "mongoose"
 
 export const createProductController = async (req, resp) => {
     try {
@@ -152,8 +153,8 @@ export const updateProductController = async (req, resp) => {
                 return resp.status(500).send({ message: "quantity is required!" })
             // case !shipping:
             //     return resp.status(500).send({ message: "shipping is required!" })
-            case !photo && photo.size > 1000000: //1 mb sa jayada nhi hona chahiya
-                return resp.status(500).send({ message: "photo is required! and less than 1 mb" })
+            case photo && photo.size > 1000000: //1 mb sa jayada nhi hona chahiya
+            return resp.status(500).send({ message: "photo is required! and less than 1 mb" })
         }
         const product = await productModel.findByIdAndUpdate(req.params.pid,
             { ...req.fields,slug: slugify(name) }, { new: true })
@@ -171,10 +172,58 @@ export const updateProductController = async (req, resp) => {
 
     } catch (error) {
         console.log(error)
+        // console.log(pid)
+
         resp.status(500).send({
             success: false,
             message: "error in updating product",
             error: error.message
+           
         })
     }
+}
+
+//FILTER CONTROLLER
+
+export const productFilterController=async(req,resp)=>{
+     try{
+        const {checked,radio}=req.body;
+        let args={}
+        if(checked.length>0)args.category=args.checked;
+        if(radio.length)args.price={$gte:radio[0],$lte:radio[1]}
+        const products= await productModel.find(args);
+        resp.status(200).send({
+            success:true,
+            products,
+        })
+     }catch(error){
+        console.log(error)
+        resp.status(500).send({
+            success: false,
+            message: "error in filtering product",
+            error
+           
+        })
+    }
+}
+
+//SERACH PRODUCT
+export const searchController=async(req,resp)=>{
+    try{
+        const {keyword}=req.params
+        const products=await productModel.find({
+            $or:[
+                {name:{$regex:keyword,$options:'i'}},
+                {description:{$regex:keyword,$options:'i'}}
+            ]
+        }).select("-photo");
+        resp.json(products)
+    }catch(error){
+        console.log(error)
+        resp.status(500).send({
+            success: false,
+            message: "error in searching product",
+            error
+           
+        })}
 }
