@@ -7,7 +7,8 @@ import { createProductController,
         deleteProductController,
         updateProductController,
         productFilterController,
-        searchController} from "../controller/productController.js"
+        searchController,
+        relatedproductController} from "../controller/productController.js"
 import formidable from "express-formidable"
 
 const router=express.Router()
@@ -35,5 +36,8 @@ router.post('/product-filters',productFilterController)
 
 //search product
 router.get('/search/:keyword',searchController)
+
+//similar product
+router.get("/related-product/:pid/:cid",relatedproductController)
 
 export default router

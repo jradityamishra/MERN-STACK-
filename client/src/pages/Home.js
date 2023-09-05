@@ -6,8 +6,10 @@ import { useAuth } from "../context/auth"
 import Products from './Admin/Products';
 import {Checkbox,Radio, Select} from 'antd'
 import { Prices}  from '../component/Prices';
+import {useCart} from "../context/cart"
 const Home = () => {
   const [auth, setAuth] = useAuth();
+  const [cart,setCart]=useCart();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked,setChecked]=useState([]);
@@ -114,7 +116,7 @@ useEffect(()=>{
           </div>
         </div>
         <div className='col-start-3 col-span-2  h-2'>
-        {JSON.stringify(radio,null,4)}
+       
           <h1 className='text-center font-bold text-2xl underline m-3'>All Products</h1>
           <div className='flex flex-wrap '>
             <h1 className='text-xl'>Products</h1>
@@ -144,7 +146,11 @@ useEffect(()=>{
                   type="button"
                   class="inline-block m-2 rounded bg-blue-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                   data-te-ripple-init
-                  data-te-ripple-color="light">
+                  data-te-ripple-color="light"
+                  onClick={()=>{setCart([...cart,c]);
+                  localStorage.setItem("cart",JSON.stringify([...cart,c]))
+                    toast.success("Item added to cart")}}
+                 >
                   Add to cart
                 </button>
                 <button

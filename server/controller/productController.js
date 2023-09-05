@@ -227,3 +227,27 @@ export const searchController=async(req,resp)=>{
            
         })}
 }
+
+//get related product
+
+export const relatedproductController=async(req,resp)=>{
+    try{
+        const {pid,cid}=req.params
+        const products=await productModel.find({
+            category:cid,
+            _id:{$ne:pid}//iss id ko include nhi karna hai
+        }).select("-photo").limit(3).populate("category")
+        resp.status(200).send({
+            success:true,
+            products,
+        })
+    }catch(error)
+    {console.log(error)
+        resp.status(500).send({
+            success: false,
+            message: "error in getting related product",
+            error
+           
+        })
+    }
+}

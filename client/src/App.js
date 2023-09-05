@@ -22,6 +22,8 @@ import Order from './pages/user/Order'
 import Products from './pages/Admin/Products'
 import UpdateProduct from './pages/Admin/UpdateProduct'
 import Search from "./pages/Search"
+import  ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
 const App = () => {
   return (
    
@@ -29,7 +31,9 @@ const App = () => {
       
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/productdetail/:slug' element={<ProductDetail/>}/>
         <Route path='/search' element={<Search/>}/>
+        <Route path='/cart' element={<Cart/>}/>
         <Route path='/dashboard' element={<Private/>}>
         <Route path='user' element={<Dashboard/>}/>
         <Route path='user/profile' element={<Profile/>}/>

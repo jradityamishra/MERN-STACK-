@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate,Link } from "react-router-dom"
 import { useAuth } from "../../context/auth"
+import { useCart } from '../../context/cart'
 import toast from 'react-hot-toast'
 import Dashboard from './../../pages/user/Dashboard';
 import Search from "../Form/SearchInput"
+import useCategory from '../hooks/useCategory';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isshow, setIsshow] = useState(false);
+  const [hide, setHide] = useState(false);
 
   //context auth
   const [auth, setAuth] = useAuth();
+  const [cart,setCart]=useCart();
+  const categories = useCategory();
   const navigate = useNavigate();
 
   //function logout
@@ -60,9 +65,39 @@ const Header = () => {
                 <NavLink to="/about" className="block mt-4 lg:inline-block lg:mt-0 text-white-200 mr-4 hover:text-slate-400 ">
                   ABOUT
                 </NavLink>
-                <NavLink to="/about" className="block mt-4 lg:inline-block lg:mt-0 text-white-200 mr-4 hover:text-slate-400 active:text-red">
-                  CATEGORY
-                </NavLink>
+                <Link to="/" className="block mt-4 lg:inline-block lg:mt-0 text-white-200 mr-4 hover:text-slate-400 active:text-red">
+                  {!hide ? (<> <button type="button" onClick={()=>{setHide(true)}} class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                            CATEGORY
+                            <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                          </button></>)
+                    :
+                    (<>
+                      <div class="relative inline-block text-left">
+                        <div>
+                          <button type="button" onClick={()=>{setHide(false)}} class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                            CATEGORY
+                            <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                          </button>
+                        </div>
+
+
+                        <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                          <div class="py-1" role="none">
+                           {
+                            categories?.map((c)=>(
+                              <Link to={`/category/${c.slug}`} class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">{c.name}</Link>
+                            ))
+                           }
+                          </div>
+                        </div>
+                      </div>
+
+                    </>)}
+                </Link>
                 <NavLink to="/contact" className="block mt-4 lg:inline-block lg:mt-0 text-white-200 mr-4 hover:text-slate-400">
                   CONTACT
                 </NavLink>
@@ -73,7 +108,7 @@ const Header = () => {
             </div>
             {/* search */}
             <div class="ml-5 flex w-[30%] items-center justify-between">
-              <Search/>
+              <Search />
             </div>
             {/* search end */}
             {!auth?.user ? (<> <button className="inline-flex items-center bg-amber-500 border-0 py-2 px-4 text-white mx-2" onClick={() => { navigate('/signup') }}>
@@ -136,7 +171,7 @@ const Header = () => {
               <ul>
                 <li>
                   <NavLink to='/cart'>
-                    cart(0)
+                   cart{cart?.length}
                   </NavLink>
                 </li>
               </ul>
